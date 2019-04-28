@@ -14,7 +14,7 @@ using namespace std;
 class BehaviorPlanner {
   public:
     int curr_lane;
-    double curr_lead_vehicle_speed = 23 - 0.5;
+    double curr_lead_vehicle_speed = 22;
     double target_vehicle_speed;
     vector<double> avg_scores = {0,0,0};
   

@@ -15,7 +15,7 @@ int BehaviorPlanner::lanePlanner(double s, double d, vector<vector<double>> sens
   // check if blocked, i.e. car is within 20 meters
   if (distance > 20) { // if lots of space, stay in lane and go near the speed limit，不变道
     new_lane = lane;
-    target_vehicle_speed = 22.352 - 0.5;
+    target_vehicle_speed = 22 - 0.5;
     avg_scores = {0,0,0}; // Reset average scores for laneScore()
     return 0;
   } else {//变道

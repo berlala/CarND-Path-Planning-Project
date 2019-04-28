@@ -318,6 +318,7 @@ int main() {
             }
           
             // Set further waypoints based on going further along highway in desired lane
+            // spline的延申控制点
             vector <double> wp1 = getXY(car_s+50, next_d, map_waypoints_s, map_waypoints_x, map_waypoints_y);
             vector <double> wp2 = getXY(car_s+100, next_d, map_waypoints_s, map_waypoints_x, map_waypoints_y);
             vector <double> wp3 = getXY(car_s+150, next_d, map_waypoints_s, map_waypoints_x, map_waypoints_y);
@@ -331,7 +332,7 @@ int main() {
             ptsy.push_back(wp3[1]);
           
             if (ptsx.size() > 2) {  // Spline fails if not greater than two points - Otherwise just use rest of old path
-              // Shift and rotate points to local coordinates
+              // Shift and rotate points to local coordinates 全局转局部
               for (int i = 0; i < ptsx.size(); i++) {
                 double shift_x = ptsx[i] - ref_x;
                 double shift_y = ptsy[i] - ref_y;
@@ -343,16 +344,16 @@ int main() {
               // create a spline
               tk::spline s;
               
-              // set (x,y) points to the spline
+              // set (x,y) points to the spline  生成trajectories
               s.set_points(ptsx, ptsy);
               
-              double target_x = 30;
-              double target_y = s(target_x);
-              double target_dist = sqrt(pow(target_x,2)+pow(target_y,2));
+              double target_x = 30; //预瞄点
+              double target_y = s(target_x); //预瞄点的y坐标
+              double target_dist = sqrt(pow(target_x,2)+pow(target_y,2)); //预瞄点距离
               
               double x_add_on = 0;
               const int MAX_ACCEL= 10; // m/s/s
-              const double accel = (MAX_ACCEL) * 0.02 * 0.8; // Limit acceleration within acceptable range
+              const double accel = (MAX_ACCEL) * 0.02 * 0.8; // Limit acceleration within acceptable range in 0.02s
               
               for(int i = 0; i < 50 - path_size; i++) {
                 if (ref_vel < bp.target_vehicle_speed - accel) {  // Accelerate if under target speed
@@ -363,7 +364,7 @@ int main() {
                 
                 // Calculate points along new path
                 double N = (target_dist/(.02*ref_vel));
-                double x_point = x_add_on+(target_x)/N;
+                double x_point = x_add_on+(target_x)/N; //累加 间隔是target_x/N
                 double y_point = s(x_point);
                 
                 x_add_on = x_point;

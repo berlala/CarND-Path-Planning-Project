@@ -1,0 +1,4 @@
+1. Step size is around 30 meters each point.
+2. Include the overall loop.
+3. Overall length 6.9km
+
