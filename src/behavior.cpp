@@ -1,6 +1,6 @@
 //
 //  behavior.cpp
-//
+//  In this file, the decision whether change lane or not will be made
 //
 
 #include "behavior.hpp"
@@ -52,7 +52,7 @@ int BehaviorPlanner::laneCalc(double d) {
 //某车道上最近车的距离和速度
 vector<double> BehaviorPlanner::closestVehicle(double s, int lane, vector<vector<double>> sensor_fusion, bool direction) {
   double dist = 10000;
-  double velocity = 22.352 - 0.5; // Set in case of no cars
+  double velocity = 23 - 0.5; // Set in case of no cars
   double vehicle_s;
   double vehicle_d;
   double vehicle_v;
@@ -60,10 +60,10 @@ vector<double> BehaviorPlanner::closestVehicle(double s, int lane, vector<vector
   
   // Check each vehicle in sensor range
   for(int vehicle = 0; vehicle < sensor_fusion.size(); vehicle++) {
-    vehicle_s = sensor_fusion[vehicle][5];
-    vehicle_d = sensor_fusion[vehicle][6];
-    vehicle_v = sqrt(pow(sensor_fusion[vehicle][3], 2)+pow(sensor_fusion[vehicle][4], 2));
-    vehicle_lane = laneCalc(vehicle_d);//被测车当前车道
+    vehicle_s = sensor_fusion[vehicle][5];  // the car's s position in Frenet coordinate 
+    vehicle_d = sensor_fusion[vehicle][6];  // the car's d position in Frenet coordinate 
+    vehicle_v = sqrt(pow(sensor_fusion[vehicle][3], 2)+pow(sensor_fusion[vehicle][4], 2)); // currently velocity
+    vehicle_lane = laneCalc(vehicle_d);//被测车所在当前车道
     
     if (vehicle_lane == lane) { // if same lane
       if (direction == true) {
