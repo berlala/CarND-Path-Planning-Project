@@ -171,6 +171,7 @@ int main() {
   uWS::Hub h;
 
   // Load up map values for waypoint's x,y,s and d normalized normal vectors
+  // 地图信息
   vector<double> map_waypoints_x;
   vector<double> map_waypoints_y;
   vector<double> map_waypoints_s;
@@ -203,6 +204,7 @@ int main() {
   	map_waypoints_dx.push_back(d_x);
   	map_waypoints_dy.push_back(d_y);
   }
+  //END 得到了所有地图上的点
 
   h.onMessage([&map_waypoints_x,&map_waypoints_y,&map_waypoints_s,&map_waypoints_dx,&map_waypoints_dy](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
@@ -266,7 +268,7 @@ int main() {
             double ref_vel;
           
             // If no previous path, initiate at current values
-            if(path_size < 2)
+            if(path_size < 2) // 从当前位置的前一位初始化轨迹点
             {
               double prev_car_x = car_x - cos(car_yaw);
               double prev_car_y = car_y - sin(car_yaw);
@@ -353,17 +355,18 @@ int main() {
               
               double x_add_on = 0;
               const int MAX_ACCEL= 10; // m/s/s
-              const double accel = (MAX_ACCEL) * 0.02 * 0.8; // Limit acceleration within acceptable range in 0.02s
+              const double accel = (MAX_ACCEL) * 0.02 * 0.75; // Limit acceleration within acceptable range in 0.02s
               
               for(int i = 0; i < 50 - path_size; i++) {
+                //速度以0.02间隔加速或者减速至目标车速，此处加减速度设置成一样，可改进
                 if (ref_vel < bp.target_vehicle_speed - accel) {  // Accelerate if under target speed
                   ref_vel += accel;
-                } else if (ref_vel > bp.target_vehicle_speed + accel) { // Brake if below target
+                } else if (ref_vel > bp.target_vehicle_speed + accel) { // Brake if above target
                   ref_vel -= accel;
                 }
                 
                 // Calculate points along new path
-                double N = (target_dist/(.02*ref_vel));
+                double N = (target_dist/(0.02*ref_vel));
                 double x_point = x_add_on+(target_x)/N; //累加 间隔是target_x/N
                 double y_point = s(x_point);
                 

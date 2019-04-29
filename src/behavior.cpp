@@ -52,7 +52,7 @@ int BehaviorPlanner::laneCalc(double d) {
 //某车道上最近车的距离和速度
 vector<double> BehaviorPlanner::closestVehicle(double s, int lane, vector<vector<double>> sensor_fusion, bool direction) {
   double dist = 10000;
-  double velocity = 23 - 0.5; // Set in case of no cars
+  double velocity = 22; // Set in case of no cars, 22.35m/s around 50 miles/hours
   double vehicle_s;
   double vehicle_d;
   double vehicle_v;
@@ -94,7 +94,7 @@ int BehaviorPlanner::laneScore(double s, int lane, vector<vector<double>> sensor
   vector <double> back_vehicle;
   
   for (int i = 0; i < 3; i++) {
-    if (i == lane) {  // benefit to keeping lane
+    if (i == lane) {  // benefit to keeping lane 保持车道
       scores[i] += 0.5;
     }
     front_vehicle = closestVehicle(s, i, sensor_fusion, true);
